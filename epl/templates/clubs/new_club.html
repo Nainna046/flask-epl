@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Add New Club</h2>
+
+<form method="post">
+    <input name="name" placeholder="Club Name" required><br><br>
+    <input name="stadium" placeholder="Stadium" required><br><br>
+    <input name="founded" type="number" placeholder="Founded" required><br><br>
+    <input name="logo" placeholder="Logo URL" required><br><br>
+
+    <button type="submit">Save</button>
+</form>
+
+{% endblock %}

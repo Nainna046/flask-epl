@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Clubs Page</h2>
+
+<form action="/clubs/search" method="get">
+    <input type="text" name="q" placeholder="Search by Club's name">
+    <button type="submit">🔍</button>
+</form>
+
+<table border="1" cellpadding="8" width="60%">
+    <tr>
+        <th>#</th>
+        <th>Club Name</th>
+        <th>Action</th>
+    </tr>
+
+    {% for club in clubs %}
+    <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ club.name }}</td>
+        <td>
+            <a href="/clubs/{{ club.id }}">👁</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

@@ -4,41 +4,14 @@
 <h2>{{ club.name }}</h2>
 
 {% if club.logo %}
-<img src="{{ club.logo }}" width="120">
+    <img src="{{ club.logo }}" width="120">
 {% endif %}
 
 <ul>
-    <li><b>Stadium:</b> {{ club.stadium }}</li>
+    <li><b>City:</b> {{ club.city }}</li>
     <li><b>Founded:</b> {{ club.founded }}</li>
 </ul>
 
-<h3>Players</h3>
-
-<table border="1" cellpadding="6" width="80%">
-    <tr>
-        <th>#</th>
-        <th>Photo</th>
-        <th>Name</th>
-        <th>Position</th>
-        <th>Nationality</th>
-    </tr>
-
-    {% for p in players %}
-    <tr>
-        <td>{{ loop.index }}</td>
-        <td>
-            {% if p.photo %}
-            <img src="{{ p.photo }}" width="60">
-            {% endif %}
-        </td>
-        <td>{{ p.name }}</td>
-        <td>{{ p.position }}</td>
-        <td>{{ p.nationality }}</td>
-    </tr>
-    {% endfor %}
-</table>
-
-<br>
-<a href="/">⬅ Back</a>
+<a href="{{ url_for('main.all_clubs') }}">← Back</a>
 
 {% endblock %}

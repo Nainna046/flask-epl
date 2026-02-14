@@ -1,29 +1,75 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<h2>Clubs Page</h2>
+<div class="container mt-4">
+    <h2 class="mb-3">Clubs Page</h2>
 
-<form action="/clubs/search" method="get">
-    <input type="text" name="q" placeholder="Search by Club's name">
-    <button type="submit">🔍</button>
-</form>
+    <!-- 🔍 Search -->
+    <form action="{{ url_for('main.all_clubs') }}" method="get" class="mb-3">
+        <div class="input-group" style="max-width: 400px;">
+            <input
+                type="text"
+                name="q"
+                class="form-control"
+                placeholder="Search by Club's name"
+                value="{{ request.args.get('q', '') }}"
+            >
+            <button class="btn btn-outline-secondary" type="submit">
+                🔍
+            </button>
+        </div>
+    </form>
 
-<table border="1" cellpadding="8" width="60%">
-    <tr>
-        <th>#</th>
-        <th>Club Name</th>
-        <th>Action</th>
-    </tr>
+    <!-- 📋 Table -->
+    <table class="table table-bordered table-hover" style="max-width: 700px;">
+        <thead class="table-light">
+            <tr>
+                <th style="width: 80px;">#</th>
+                <th>Club Name</th>
+                <th style="width: 160px;">Action</th>
+            </tr>
+        </thead>
 
-    {% for club in clubs %}
-    <tr>
-        <td>{{ loop.index }}</td>
-        <td>{{ club.name }}</td>
-        <td>
-            <a href="/clubs/{{ club.id }}">👁</a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+        <tbody>
+            {% for club in clubs %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ club.name }}</td>
+                <td>
+
+                    <!-- 👁 View -->
+                    <a href="{{ url_for('main.info_club', id=club.id) }}"
+                       class="btn btn-outline-info btn-sm">
+                        👁
+                    </a>
+
+                    <!-- ✏️ Edit -->
+                    <a href="{{ url_for('main.update_club', id=club.id) }}"
+                       class="btn btn-outline-warning btn-sm">
+                        ✏️
+                    </a>
+
+                    <!-- 🗑 Delete -->
+                    <form action="{{ url_for('main.delete_club', id=club.id) }}"
+                          method="post"
+                          style="display:inline;">
+                        <button class="btn btn-outline-danger btn-sm"
+                                onclick="return confirm('Delete this club?')">
+                            🗑
+                        </button>
+                    </form>
+
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3" class="text-center text-muted">
+                    No clubs found
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}

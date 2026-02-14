@@ -1,15 +1,35 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<h2>Add New Club</h2>
+<div class="container mt-4">
+    <h2 class="mb-4">Add New Club</h2>
 
-<form method="post">
-    <input name="name" placeholder="Club Name" required><br><br>
-    <input name="stadium" placeholder="Stadium" required><br><br>
-    <input name="founded" type="number" placeholder="Founded" required><br><br>
-    <input name="logo" placeholder="Logo URL" required><br><br>
+    <form method="POST">
+        <div class="mb-3">
+            <label><strong>Club Name</strong></label>
+            <input name="name" class="form-control" required>
+        </div>
 
-    <button type="submit">Save</button>
-</form>
+        <div class="mb-3">
+            <label><strong>City</strong></label>
+            <input name="city" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label><strong>Founded</strong></label>
+            <input name="founded" type="number" class="form-control" required>
+        </div>
+
+        <!-- ⭐ โลโก้ -->
+        <div class="mb-3">
+            <label><strong>Logo URL</strong></label>
+            <input name="logo" class="form-control" placeholder="https://...">
+        </div>
+
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="{{ url_for('main.all_clubs') }}"
+           class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
 
 {% endblock %}

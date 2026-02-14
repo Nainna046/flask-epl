@@ -12,7 +12,7 @@
   <div class="row">
     <!-- 🔥 Add Player -->
     <div class="col">
-      <a href="{{ url_for('players.new_player') }}"
+      <a href="{{ url_for('main.new_player') }}"
          class="btn btn-outline-success">
         <i class="bi bi-folder-plus"></i>
         Add New Player
@@ -24,7 +24,7 @@
       <form method="post"
             hx-target="#result"
             hx-trigger="submit"
-            hx-post="{{ url_for('players.index_player') }}"
+            hx-post="{{ url_for('main.all_players') }}"
             hx-on::after-request="if(event.detail.successful) this.reset()">
         <div class="input-group mb-3">
           <input name="player_name"
@@ -55,7 +55,7 @@
         <td>{{ loop.index }}</td>
         <td>{{ player.name }}</td>
         <td>
-          <a href="{{ url_for('players.info_player', id=player.id) }}"
+          <a href="{{ url_for('main.info_player', id=player.id) }}"
              class="btn btn-outline-info btn-sm">
             <i class="bi bi-info-circle"></i>
           </a>

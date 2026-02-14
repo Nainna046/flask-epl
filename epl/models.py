@@ -9,6 +9,10 @@ class Club(db.Model):
     city = db.Column(db.String(100))
     founded = db.Column(db.Integer)
 
+    # ⭐ โลโก้
+    logo = db.Column(db.String(255), nullable=True)
+
+    # ⭐ ความสัมพันธ์กับ Player
     players = db.relationship("Player", backref="club", lazy=True)
 
 
@@ -20,8 +24,7 @@ class Player(db.Model):
     position = db.Column(db.String(50))
     nationality = db.Column(db.String(50))
 
-    # ⭐ ต้องมีอันนี้ตามโจทย์
+    # ⭐ ตามโจทย์
     clean_sheets = db.Column(db.Integer, nullable=True)
 
     club_id = db.Column(db.Integer, db.ForeignKey("clubs.id"))
-

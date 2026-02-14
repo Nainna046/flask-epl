@@ -2,7 +2,7 @@ from flask import Blueprint, redirect, render_template, url_for, flash, request
 from epl import db
 from epl.models import Club, Player
 
-# ✅ สร้าง blueprint
+# ✅ blueprint
 main = Blueprint("main", __name__)
 
 
@@ -19,7 +19,16 @@ def index():
 # ================================
 @main.route('/clubs')
 def all_clubs():
-    clubs = db.session.scalars(db.select(Club)).all()
+    q = request.args.get('q')
+
+    stmt = db.select(Club)
+
+    # 🔍 search
+    if q:
+        stmt = stmt.where(Club.name.ilike(f"%{q}%"))
+
+    clubs = db.session.scalars(stmt).all()
+
     return render_template(
         'clubs/index.html',
         title='Clubs Page',
@@ -30,12 +39,13 @@ def all_clubs():
 @main.route('/clubs/new', methods=['GET', 'POST'])
 def new_club():
     if request.method == 'POST':
-        name = request.form['name']
-        stadium = request.form['stadium']
-        year = int(request.form['year'])
-        logo = request.form['logo']
+        club = Club(
+            name=request.form['name'],
+            city=request.form['city'],
+            founded=int(request.form['founded']),
+            logo=request.form.get('logo')
+        )
 
-        club = Club(name=name, stadium=stadium, year=year, logo=logo)
         db.session.add(club)
         db.session.commit()
 
@@ -48,27 +58,7 @@ def new_club():
     )
 
 
-@main.route('/clubs/search', methods=['GET', 'POST'])
-def search_club():
-    if request.method == 'POST':
-        club_name = request.form['club_name']
-        clubs = db.session.scalars(
-            db.select(Club).where(Club.name.like(f'%{club_name}%'))
-        ).all()
-
-        return render_template(
-            'clubs/search_club.html',
-            title='Search Club Page',
-            clubs=clubs
-        )
-
-    return render_template(
-        'clubs/search_club.html',
-        title='Search Club Page',
-        clubs=[]
-    )
-
-
+# 👁 info club
 @main.route('/clubs/<int:id>/info')
 def info_club(id):
     club = db.session.get(Club, id)
@@ -79,15 +69,16 @@ def info_club(id):
     )
 
 
+# ✏️ update
 @main.route('/clubs/<int:id>/update', methods=['GET', 'POST'])
 def update_club(id):
     club = db.session.get(Club, id)
 
     if request.method == 'POST':
         club.name = request.form['name']
-        club.stadium = request.form['stadium']
-        club.year = int(request.form['year'])
-        club.logo = request.form['logo']
+        club.city = request.form['city']
+        club.founded = int(request.form['founded'])
+        club.logo = request.form.get('logo')
 
         db.session.commit()
 
@@ -100,6 +91,18 @@ def update_club(id):
         club=club
     )
 
+
+# 🗑 DELETE (สำคัญมาก)
+@main.route('/clubs/<int:id>/delete', methods=['POST'])
+def delete_club(id):
+    club = db.session.get(Club, id)
+
+    if club:
+        db.session.delete(club)
+        db.session.commit()
+        flash('delete club successfully', 'success')
+
+    return redirect(url_for('main.all_clubs'))
 
 # ================================
 # PLAYERS MODULE
@@ -117,12 +120,6 @@ def all_players():
 @main.route('/players/new', methods=['GET', 'POST'])
 def new_player():
     if request.method == 'POST':
-        name = request.form['name']
-        position = request.form['position']
-        nationality = request.form['nationality']
-        club_id = int(request.form['club_id'])
-
-        # ✅ clean sheets (กัน crash)
         clean_sheets = request.form.get('clean_sheets')
         try:
             clean_sheets = int(clean_sheets) if clean_sheets else None
@@ -130,11 +127,11 @@ def new_player():
             clean_sheets = None
 
         player = Player(
-            name=name,
-            position=position,
-            nationality=nationality,
+            name=request.form['name'],
+            position=request.form['position'],
+            nationality=request.form['nationality'],
             clean_sheets=clean_sheets,
-            club_id=club_id
+            club_id=int(request.form['club_id'])
         )
 
         db.session.add(player)
@@ -147,46 +144,5 @@ def new_player():
     return render_template(
         'players/new_player.html',
         title='New Player Page',
-        clubs=clubs
-    )
-
-
-@main.route('/players/<int:id>/info')
-def info_player(id):
-    player = db.session.get(Player, id)
-    return render_template(
-        'players/info_player.html',
-        title='Info Player Page',
-        player=player
-    )
-
-
-@main.route('/players/<int:id>/update', methods=['GET', 'POST'])
-def update_player(id):
-    player = db.session.get(Player, id)
-
-    if request.method == 'POST':
-        player.name = request.form['name']
-        player.position = request.form['position']
-        player.nationality = request.form['nationality']
-        player.club_id = int(request.form['club_id'])
-
-        # ✅ clean sheets (กัน crash)
-        clean_sheets = request.form.get('clean_sheets')
-        try:
-            player.clean_sheets = int(clean_sheets) if clean_sheets else None
-        except ValueError:
-            player.clean_sheets = None
-
-        db.session.commit()
-
-        flash('update player successfully', 'success')
-        return redirect(url_for('main.all_players'))
-
-    clubs = db.session.scalars(db.select(Club)).all()
-    return render_template(
-        'players/update_player.html',
-        title='Update Player Page',
-        player=player,
         clubs=clubs
     )

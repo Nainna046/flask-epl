@@ -7,17 +7,22 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__, template_folder="templates")
 
+    # ========================
+    # CONFIG
+    # ========================
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///epl.sqlite"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["SECRET_KEY"] = "dev"
+    app.config["SECRET_KEY"] = "dev"  # ⭐ สำคัญมากสำหรับ flash
 
+    # ========================
+    # INIT EXTENSIONS
+    # ========================
     db.init_app(app)
 
-    # ⭐ register blueprints
+    # ========================
+    # REGISTER BLUEPRINT
+    # ========================
     from .routes import main
-    from .players.routes import players
-
     app.register_blueprint(main)
-    app.register_blueprint(players)
 
     return app

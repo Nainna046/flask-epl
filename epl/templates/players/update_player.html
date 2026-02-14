@@ -21,10 +21,22 @@
         <div class="form-group mb-3">
             <label><strong>Position</strong></label>
             <select name="position" class="form-control" required>
-                <option value="Goalkeeper" {% if player.position == "Goalkeeper" %}selected{% endif %}>Goalkeeper</option>
-                <option value="Defender" {% if player.position == "Defender" %}selected{% endif %}>Defender</option>
-                <option value="Midfielder" {% if player.position == "Midfielder" %}selected{% endif %}>Midfielder</option>
-                <option value="Forward" {% if player.position == "Forward" %}selected{% endif %}>Forward</option>
+                <option value="Goalkeeper"
+                    {% if player.position == "Goalkeeper" %}selected{% endif %}>
+                    Goalkeeper
+                </option>
+                <option value="Defender"
+                    {% if player.position == "Defender" %}selected{% endif %}>
+                    Defender
+                </option>
+                <option value="Midfielder"
+                    {% if player.position == "Midfielder" %}selected{% endif %}>
+                    Midfielder
+                </option>
+                <option value="Forward"
+                    {% if player.position == "Forward" %}selected{% endif %}>
+                    Forward
+                </option>
             </select>
         </div>
 
@@ -61,6 +73,7 @@
                 name="clean_sheets"
                 class="form-control"
                 value="{{ player.clean_sheets }}"
+                min="0"
             >
             <small class="form-text text-muted">
                 Leave blank if player is not a goalkeeper.
@@ -71,7 +84,7 @@
         <button type="submit" class="btn btn-primary">
             Update Player
         </button>
-        <a href="{{ url_for('players.info_player', id=player.id) }}"
+        <a href="{{ url_for('main.info_player', id=player.id) }}"
            class="btn btn-secondary">
             Cancel
         </a>

@@ -1,0 +1,68 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+  EPL
+{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+  <h2>EPL</h2>
+  <hr>
+
+  <div class="row">
+    <!-- 🔥 Add Player -->
+    <div class="col">
+      <a href="{{ url_for('players.new_player') }}"
+         class="btn btn-outline-success">
+        <i class="bi bi-folder-plus"></i>
+        Add New Player
+      </a>
+    </div>
+
+    <!-- 🔍 Search -->
+    <div class="col">
+      <form method="post"
+            hx-target="#result"
+            hx-trigger="submit"
+            hx-post="{{ url_for('players.index_player') }}"
+            hx-on::after-request="if(event.detail.successful) this.reset()">
+        <div class="input-group mb-3">
+          <input name="player_name"
+                 type="text"
+                 class="form-control"
+                 placeholder="Search by Player's name">
+          <button class="btn btn-outline-secondary" type="submit">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 📋 Table -->
+  <table class="table table-hover mt-3">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Player Name</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody id="result">
+      {% for player in players %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ player.name }}</td>
+        <td>
+          <a href="{{ url_for('players.info_player', id=player.id) }}"
+             class="btn btn-outline-info btn-sm">
+            <i class="bi bi-info-circle"></i>
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

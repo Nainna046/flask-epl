@@ -1,53 +1,90 @@
-{% extends 'layout.html' %}
-
-{% block title %}
-  {{title}}
-{% endblock %}
-
+{% extends "layout.html" %}
 {% block content %}
-  <div class="container mt-3 mb-3">
-    <h2>{{title}}</h2>
-    <hr>
-    <form method="post">
-      <div class="mb-3">
-        <label for="name" class="form-label">Player Name</label>
-        <input name="name" type="text" class="form-control" id="name" required>
-      </div>
-      <div class="mb-3">
-        <label for="position" class="form-label">Select Position</label>
-        <select name="position" class="form-select" aria-label="Default select example">
-          <option value="Goalkeeper">Goalkeeper</option>
-          <option value="Defender">Defender</option>
-          <option value="Midfielder">Midfielder</option>
-          <option value="Forward">Forward</option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label for="nationality" class="form-label">Nationality</label>
-        <input name="nationality" type="text" class="form-control" id="nationality" required>
-      </div>
-      <div class="mb-3">
-        <label for="goals" class="form-label">Goals</label>
-        <input name="goals" type="number" class="form-control" id="goals" required>
-      </div>
-      
-      <div class="mb-3">
-        <label for="img" class="form-label">Image URL</label>
-        <input name="img" type="text" class="form-control" id="img" required>
-      </div>
-      <div class="mb-3">
-        <label for="position" class="form-label">Select Club</label>
-        <select name="club_id" class="form-select" aria-label="Default select example">
-          {% for club in clubs %}
-            <option value="id">club name</option>
-          {% endfor %}
-          
-        </select>
-      </div>
-      <button type="submit" class="btn btn-outline-success">
-        <i class="bi bi-folder-plus"></i>
-        New Player
-      </button>
+
+<div class="container mt-4">
+    <h2 class="mb-4">Add New Player</h2>
+
+    <form method="POST">
+        <!-- Player Name -->
+        <div class="form-group mb-3">
+            <label><strong>Name</strong></label>
+            <input
+                type="text"
+                name="name"
+                class="form-control"
+                placeholder="Enter player name"
+                required
+            >
+        </div>
+
+        <!-- Position -->
+        <div class="form-group mb-3">
+            <label><strong>Position</strong></label>
+            <select name="position" class="form-control" required>
+                <option value="">-- Select Position --</option>
+                <option value="Goalkeeper">Goalkeeper</option>
+                <option value="Defender">Defender</option>
+                <option value="Midfielder">Midfielder</option>
+                <option value="Forward">Forward</option>
+            </select>
+        </div>
+
+        <!-- Nationality -->
+        <div class="form-group mb-3">
+            <label><strong>Nationality</strong></label>
+            <input
+                type="text"
+                name="nationality"
+                class="form-control"
+                placeholder="Enter nationality"
+                required
+            >
+        </div>
+
+        <!-- Club -->
+        <div class="form-group mb-3">
+            <label><strong>Club</strong></label>
+            <select name="club_id" class="form-control" required>
+                <option value="">-- Select Club --</option>
+                {% for club in clubs %}
+                    <option value="{{ club.id }}">{{ club.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- ⭐ Clean Sheets (ตามโจทย์) -->
+        <div class="form-group mb-4">
+            <label><strong>Clean Sheets (Goalkeeper only)</strong></label>
+            <input
+                type="number"
+                name="clean_sheets"
+                class="form-control"
+                placeholder="Enter clean sheets (GK only)"
+            >
+            <small class="form-text text-muted">
+                Leave blank if player is not a goalkeeper.
+            </small>
+        </div>
+
+        <!-- Buttons -->
+        <button type="submit" class="btn btn-primary">
+            Add Player
+        </button>
+        <a href="{{ url_for('players.index_player') }}" class="btn btn-secondary">
+            Cancel
+        </a>
+
+        <div class="form-group mb-4">
+    <label><strong>Clean Sheets (Goalkeeper only)</strong></label>
+    <input
+        type="number"
+        name="clean_sheets"
+        class="form-control"
+        placeholder="Enter clean sheets (GK only)"
+    >
+</div>
+
     </form>
-  </div>
+</div>
+
 {% endblock %}
